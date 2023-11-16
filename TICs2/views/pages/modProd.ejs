@@ -12,6 +12,39 @@
         />
     </head>
     <body>
-        Page to modify
+        <form class="form-floating" action="/modificar" method="POST">
+            <div class="mb-3">
+                <input
+                    class="form-control"
+                    id="floatingInputName"
+                    name="nombreAnterior"
+                    placeholder="nombre"
+                    value="<%= nombre_prod %>"
+                    readonly
+                    style="display: none;"
+                />
+            </div>
+            <div class="mb-3">
+                <label for="floatingInputName">Nombre Del Producto</label>
+                <input
+                    class="form-control"
+                    id="floatingInputName"
+                    name="nombre"
+                    placeholder="nombre"
+                    value="<%= nombre_prod %>"
+                />
+            </div>
+            <div class="mb-3">
+                <label for="floatingInputCant">Cantidad Del Producto</label>
+                <input
+                    class="form-control"
+                    id="floatingInputCant"
+                    name="cantidad"
+                    placeholder="cantidad"
+                    value="<%= cantidad %>"
+                />
+            </div>
+            <button type="submit" class="btn btn-warning">Modificar</button>
+        </form>
     </body>
 </html>

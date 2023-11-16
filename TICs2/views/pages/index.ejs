@@ -29,21 +29,27 @@
             <tbody>
                 <% for (let j = 0; j < i; j++){%>
                 <tr>
-                    <th scope="row"><%= nombreProd[j] %></th>
+                    <th scope="row"><%= nombre_prod[j] %></th>
                     <td><%= numero[j] %></td>
                     <td>
-                        <a href="/modProd"><button type="button" class="btn btn-warning">Modificar</button></a>
-                        <a href="/modProd"><button type="button" class="btn btn-danger">Eliminar</button></a>
+                        <a href="/modProd?nombre_prod=<%=nombre_prod[j]%>&cantidad=<%=numero[j]%>">
+                            <button type="button" class="btn btn-warning">
+                                Modificar
+                            </button>
+                        </a>
+                        <a href="/modProd">
+                            <button type="button" class="btn btn-danger">
+                                Eliminar
+                            </button>
+                        </a>
                     </td>
                 </tr>
                 <%}%>
             </tbody>
         </table>
 
-        
-        <a href="/"><button type="button" class="btn btn-primary" >Modificar</button></a>
-
-
-
+        <a href="/agregar">
+            <button type="button" class="btn btn-primary">Agregar Producto</button>
+        </a>
     </body>
 </html>
