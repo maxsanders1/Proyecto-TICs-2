@@ -113,9 +113,36 @@ app.post("/modificar", async (req, res) => {
         console.error(error);
         res.status(500).send("Internal Server Error");
     }
+});
 
+app.post("/eliminar", async (req, res) => {
+    const nombre_prod = req.body.nombre_prod;
+    console.log(req.body);
+    try {
+        const query =  ` DELETE FROM public.bodega WHERE nombre_prod = '${nombre_prod}'; `
+        console.log(query);
+        const result = await db.query(query);
+        console.log(result);
+        const query2 =  `SELECT * FROM  public.bodega ORDER BY nombre_prod ASC`
+        const result2 = await db.query(query2);
+        var i = result2.rowCount;
+        let nombres = [];
+        let cantidad = [];
+        for (let index = 0; index < i; index++) {
+            nombres.push(result2.rows[index].nombre_prod);
+            cantidad.push(result2.rows[index].cantidad);
+        }
+        console.log(nombre_prod);
+        res.render("pages/index.ejs", {
+            nombre_prod: nombres,
+            numero: cantidad,
+            i: i,
+        });
 
-
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
 });
 
 app.listen(port, () => {
