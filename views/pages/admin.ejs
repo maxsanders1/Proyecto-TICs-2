@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%- include('Headers.ejs') %>
+
+        <style>
+            li:hover {
+                background-color: #fbce07;
+                color: #000000;
+            }
+            
+            .box{
+                border: 7px double #dd1d21;
+                box-shadow: 15px 15px 13px 0px rgba(0,0,0,0.57);
+                -webkit-box-shadow: 15px 15px 13px 0px rgba(0,0,0,0.57);
+                -moz-box-shadow: 15px 15px 13px 0px rgba(0,0,0,0.57);
+                background-color: white ;
+            }
+            .grid_containder {
+                display: grid;
+                grid-template-columns: repeat(1, 1fr);
+                grid-template-rows: repeat(1, 1fr);
+                grid-column-gap: 16px;
+                grid-row-gap: 16px;
+                justify-items: center;
+                align-items: center;
+            }
+
+            .div1 { grid-area: 1 / 1 / 2 / 2; }
+            .div2 { grid-area: 1 / 2 / 2 / 3; }
+            .div3 { grid-area: 2 / 1 / 3 / 2; }
+            .div4 { grid-area: 2 / 2 / 3 / 3; }
+            
+            .precios{
+                margin-top: 1vh;
+            }
+            
+        </style>
+        <title>Document</title>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row flex-nowrap">
+                <%- include('sidebar.ejs') %>
+                <div class="col py-3">
+                    <div class="grid_containder">
+                        <div class="box div1" style="width: 30vw; height: 13vh;">
+                            <p>Total de Litros Vendidos Hoy</p>
+                            <p><%= sumLitros %></p>
+                        </div>
+                        <div class="box div2" style="width: 30vw; height: 13vh;">
+                            <p>Total Ventas Hoy</p>
+                            <p><%= sumDinero %></p>
+                        </div>
+                        <div  class="chart-container div3" style="position: relative; height: 43vh; width:50vw; background-color: white">
+                            <canvas id="myChart"></canvas>
+                        </div>
+
+                        <div class="precios div4" style="">
+                            <div class="precios">
+                                <p style="background-color: white; border: 1px solid;">Precio Bencinas</p>
+                                <div class="box" style="margin-bottom: 20px;">
+                                    <p >Precio Bencina 93</p>
+                                    <p><%= precios[0] %></p>
+                                </div>
+                                
+                                <div class="box" style="margin-bottom: 20px;">
+                                    <p >Precio Bencina 95</p>
+                                    <p><%= precios[1] %></p>
+                                </div>
+                                
+                                <div class="box" style="margin-bottom: 20px;">
+                                    <p >Precio Bencina 97</p>
+                                    <p><%= precios[2] %></p>
+                                </div>
+                                <div class="box" style="margin-bottom: 20px;">
+                                    <p >Precio Kerosen</p>
+                                    <p><%= precios[3] %></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                    <script>
+                        const ctx = document.getElementById("myChart");
+                        new Chart(ctx, {
+                            type: "line",
+                            data: {
+                                labels: <%- JSON.stringify(graf_fechas) %>,
+                                datasets: [
+                                    {
+                                        label: "Litros Vendidos",
+                                        data:
+                                        <%- JSON.stringify(graf_sumas) %>,
+                                        borderWidth: 1,
+                                    },
+                                ],
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                    },
+                                },
+                            },
+                        });
+                    </script>
+                    
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
