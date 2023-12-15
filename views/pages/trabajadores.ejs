@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('Headers.ejs') %>
+    <style>
+        .table-hover tbody tr:hover td,
+        .table-hover tbody tr:hover th {
+            background-color: rgb(253, 151, 108);
+        }
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <%- include('sidebar.ejs') %>
+            <div class="col py-3">
+                <!-- Table for Admin Workers -->
+                <h2>Administrador</h2>
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nombre del Trabajador</th>
+                            <th scope="col">Contraseña</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (let j = 0; j < i; j++){%>
+                            <% if (tipo[j] === 'admin') { %>
+                                <tr>
+                                    <th scope="row"><%= nombre_usr[j] %></th>
+                                    <td><%= password[j] %></td>
+                                    <td><%= tipo[j] %></td>
+                                    
+                                    <td>
+                                        <a href="/modTrab?nombreAnterior=<%=nombre_usr[j]%>&nombre_usr=<%=nombre_usr[j]%>&password=<%=password[j]%>&tipo=<%=tipo[j]%>">
+                                            <button type="button" class="btn btn-warning">
+                                                Modificar
+                                            </button>
+                                        </a>
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal<%= j %>">
+                                            Eliminar
+                                        </button>
+                                    </td>
+                                </tr>
+                            <% } %>
+                        <% } %>
+                    </tbody>
+                </table>
+
+                <h2>Bomberos</h2>
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr> 
+                            <th scope="col">Nombre del Trabajador</th>
+                            <th scope="col">Contraseña</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (let j = 0; j < i; j++){%>
+                            <% if (tipo[j] === 'bombero') { %>
+                                <tr>
+                                    <th scope="row"><%= nombre_usr[j] %></th>
+                                    <td><%= password[j] %></td>
+                                    <td><%= tipo[j] %></td>
+                                    
+                                    <td>
+                                        <a href="/modTrab?nombreAnterior=<%=nombre_usr[j]%>&nombre_usr=<%=nombre_usr[j]%>&password=<%=password[j]%>&tipo=<%=tipo[j]%>">
+                                            <button type="button" class="btn btn-warning">
+                                                Modificar
+                                            </button>
+                                        </a>
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal<%= j %>">
+                                            Eliminar
+                                        </button>
+                                    </td>
+                                </tr>
+                            <% } %>
+                        <% } %>
+                    </tbody>
+                </table>
+
+                <h2>Cajeros</h2>
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nombre del Trabajador</th>
+                            <th scope="col">Contraseña</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (let j = 0; j < i; j++){%>
+                            <% if (tipo[j] === 'cajero') { %>
+                                <tr>
+                                    <th scope="row"><%= nombre_usr[j] %></th>
+                                    <td><%= password[j] %></td>
+                                    <td><%= tipo[j] %></td>
+                                    
+                                    <td>
+                                        <a href="/modTrab?nombreAnterior=<%=nombre_usr[j]%>&nombre_usr=<%=nombre_usr[j]%>&password=<%=password[j]%>&tipo=<%=tipo[j]%>">
+                                            <button type="button" class="btn btn-warning">
+                                                Modificar
+                                            </button>
+                                        </a>
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal<%= j %>">
+                                            Eliminar
+                                        </button>
+                                    </td>
+                                </tr>
+                            <% } %>
+                        <% } %>
+                    </tbody>
+                </table>
+
+                <h2>Lavadores</h2>
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nombre del Trabajador</th>
+                            <th scope="col">Contraseña</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (let j = 0; j < i; j++){%>
+                            <% if (tipo[j] === 'lavador') { %>
+                                <tr>
+                                    <th scope="row"><%= nombre_usr[j] %></th>
+                                    <td><%= password[j] %></td>
+                                    <td><%= tipo[j] %></td>
+                                    
+                                    <td>
+                                        <a href="/modTrab?nombreAnterior=<%=nombre_usr[j]%>&nombre_usr=<%=nombre_usr[j]%>&password=<%=password[j]%>&tipo=<%=tipo[j]%>">
+                                            <button type="button" class="btn btn-warning">
+                                                Modificar
+                                            </button>
+                                        </a>
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal<%= j %>">
+                                            Eliminar
+                                        </button>
+                                    </td>
+                                </tr>
+                            <% } %>
+                        <% } %>
+                    </tbody>
+                </table>
+                
+                <a href="/agregarTrab">
+                    <button type="button" class="btn btn-primary">
+                        Agregar Trabajador
+                    </button>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

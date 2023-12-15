@@ -30,6 +30,8 @@
             .div2 { grid-area: 1 / 2 / 2 / 3; }
             .div3 { grid-area: 2 / 1 / 3 / 2; }
             .div4 { grid-area: 2 / 2 / 3 / 3; }
+            .div5 { grid-area: 3 / 1 / 4 / 2; }
+            .div6 { grid-area: 3 / 2 / 4 / 3; }
             
             .precios{
                 margin-top: 1vh;
@@ -51,6 +53,14 @@
                         <div class="box div2" style="width: 30vw; height: 13vh;">
                             <p>Total Ventas Hoy</p>
                             <p><%= sumDinero %></p>
+                        </div>
+                        <div class="box div5" style="width: 30vw; height: 13vh;">
+                            <p>Total de Litros Vendidos en el mes</p>
+                            <p><%= sumLitrosMonth %></p>
+                        </div>
+                        <div class="box div6" style="width: 30vw; height: 13vh;">
+                            <p>Total Ventas del mes</p>
+                            <p><%= sumDineroMonth %></p>
                         </div>
                         <div  class="chart-container div3" style="position: relative; height: 43vh; width:50vw; background-color: white">
                             <canvas id="myChart"></canvas>

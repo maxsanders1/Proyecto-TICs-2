@@ -20,7 +20,7 @@ app.get("/admin", async (req, res) => {
     console.log(year + "-" + month + "-" + date);
     const day = year + "-" + month + "-" + date
     try {
-        const result = await db.query(`SELECT monto, precio_ben FROM public.ventas_ben WHERE fecha = '${day}' ;`);
+        const result = await db.query(`SELECT monto, precio_ben FROM public.ventas_ben WHERE fecha = '${day}';`);
         const count = result.rowCount
         const monto = []
         const precio = []
@@ -42,11 +42,34 @@ app.get("/admin", async (req, res) => {
         console.log(sum.toFixed(1));
         console.log(dinero);
 
+        const resultMonth = await db.query(`SELECT monto, precio_ben FROM public.ventas_ben WHERE fecha >= '${year}-${month}-01' AND fecha <= '${year}-${month}-31';`);
+        const countMonth = resultMonth.rowCount
+        const montoMonth = []
+        const precioMonth = []
+        for (let index = 0; index < countMonth; index++) {
+            montoMonth.push(resultMonth.rows[index].monto);
+            precioMonth.push(resultMonth.rows[index].precio_ben);
+        }
+        const litrosMonth = []
+        for (let index = 0; index < countMonth; index++) {
+            litrosMonth.push(montoMonth[index]/precioMonth[index])
+        }
+        var sumMonth = 0;
+        var dineroMonth = 0;
+        for (let index = 0; index < countMonth; index++) {
+            sumMonth = sumMonth + litrosMonth[index];
+            dineroMonth = dineroMonth + montoMonth[index]
+        }
+
+        console.log(sumMonth.toFixed(1));
+        console.log(dineroMonth);
+
         const result2 = await db.query(`SELECT to_char(fecha,'YYYY-MM-DD'), sum(monto/precio_ben) FROM public.ventas_ben GROUP BY fecha ORDER BY fecha;`);
         //console.log(result2);
         const options1 = { style: 'currency', currency: 'CLP' };
         const numberFormat1 = new Intl.NumberFormat('en-US', options1);
         const formatDinero = numberFormat1.format(dinero)
+        const formatDineroMonth = numberFormat1.format(dineroMonth)
 
         const sumas_graf = []
         const fechas_graf = []
@@ -68,7 +91,7 @@ app.get("/admin", async (req, res) => {
 
         console.log(precios_ben);
 
-        res.render("pages/admin.ejs", {day: day, sumLitros : sum.toFixed(1), sumDinero:formatDinero, graf_fechas: fechas_graf, graf_sumas: sumas_graf, precios: precios_ben });
+        res.render("pages/admin.ejs", {day: day, sumLitros : sum.toFixed(1), sumDinero:formatDinero, graf_fechas: fechas_graf, graf_sumas: sumas_graf, precios: precios_ben, sumLitrosMonth : sumMonth.toFixed(1), sumDineroMonth : formatDineroMonth });
 
 
 
@@ -109,10 +132,75 @@ app.get("/inventario", async (req, res) => {
     }
 });
 
+app.get("/trabajadores", async (req, res) => {
+    try {
+        const result = await db.query('SELECT * FROM public."usuarios" ORDER BY nombre_usr;');
+        var i = result.rowCount;
+        let nombres = [];
+        let password = [];
+        let tipo = []
+        for (let index = 0; index < i; index++) {
+            nombres.push(result.rows[index].nombre_usr);
+            password.push(result.rows[index].password);
+            tipo.push(result.rows[index].tipo_usr);
+        }
+        res.render("pages/trabajadores.ejs", {
+            nombre_usr: nombres,
+            password: password,
+            tipo: tipo,
+            i: i,
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
 app.get("/modProd", (req, res) => {
     var nombre_prod = req.query.nombre_prod;
     let cantidad = req.query.cantidad;
     res.render("pages/modProd.ejs",{nombre_prod: nombre_prod, cantidad: cantidad});
+});
+
+app.post("/modTrab", async (req, res) => {
+    const nombreAnterior = req.body.nombreAnterior;
+    const nombre_usr = req.body.nombre_usr;
+    const password = req.body.password;
+    const tipo_usr = req.body.tipo_usr;
+    try {
+        const query =  `UPDATE public.usuarios SET "nombre_usr" = '${nombre_usr}', "password" = '${password}', "tipo_usr" = '${tipo_usr}' WHERE usuarios.nombre_usr = '${nombreAnterior}'; `
+        console.log(query);
+        const result = await db.query(query);
+        console.log(result);
+        const query2 =  `SELECT * FROM  public.usuarios ORDER BY tipo_usr ASC`
+        const result2 = await db.query(query2);
+        var i = result2.rowCount;
+        let nombres = [];
+        let passwords = [];
+        let tipos = [];
+        for (let index = 0; index < i; index++) {
+            nombres.push(result2.rows[index].nombre_usr);
+            passwords.push(result2.rows[index].password);
+            tipos.push(result2.rows[index].tipo_usr);
+        }
+        res.render("pages/trabajadores.ejs", {
+            nombre_usr: nombres,
+            password: passwords,
+            tipo: tipos,
+            i: i,
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+app.get("/modTrab", (req, res) => {
+    var nombre_usr = req.query.nombre_usr;
+    let password = req.query.password;
+    let tipo_usr = req.query.tipo_usr;
+    res.render("pages/modTrab.ejs",{nombre_usr: nombre_usr, password: password, tipo_usr: tipo_usr});
 });
 
 app.get("/agregar", (req, res) => {
@@ -140,6 +228,45 @@ app.post("/agregar", async (req, res) => {
         res.render("pages/index.ejs", {
             nombre_prod: nombres,
             numero: cantidad,
+            i: i,
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+    
+});
+
+app.get("/agregarTrab", (req, res) => {
+    res.render("pages/agregarTrab.ejs");
+});
+
+app.post("/agregarTrab", async (req, res) => {
+    const nombre_trab = req.body.nombre;
+    const password = req.body.password;
+    const tipo = req.body.tipo;
+    try {
+        const query =  `INSERT INTO public.usuarios(nombre_usr, password, tipo_usr) VALUES ('${nombre_trab}', ${password}, '${tipo}'); `
+        console.log(query);
+        const result = await db.query(query);
+        console.log(result);
+        const query2 =  `SELECT * FROM  public.usuarios ORDER BY tipo_usr ASC`
+        const result2 = await db.query(query2);
+        var i = result2.rowCount;
+        let nombres = [];
+        let passwords = [];
+        let tipos = [];
+        for (let index = 0; index < i; index++) {
+            nombres.push(result2.rows[index].nombre_usr);
+            passwords.push(result2.rows[index].password);
+            tipos.push(result2.rows[index].tipo_usr);
+        }
+        
+        res.render("pages/trabajadores.ejs", {
+            nombre_usr: nombres,
+            password: passwords,
+            tipo: tipos,
             i: i,
         });
 
